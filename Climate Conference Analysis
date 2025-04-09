@@ -1,0 +1,42 @@
+Climate Conference Project
+https://www.db-fiddle.com/f/pxMci1sLL945KHKYvpe9W6/1
+
+INNER JOIN: SELECT v.first_name, v.last_name, h.hotel_name
+FROM reservations r
+INNER JOIN vips v ON r.member_id = v.member_id
+INNER JOIN hotels h ON r.hotel = h.hotel_id;
+
+LEFT JOIN: SELECT v.first_name, v.last_name, r.dinner_rsvp
+FROM vips v
+LEFT JOIN reservations r ON v.member_id = r.member_id;
+
+MULTIPLE JOINS: SELECT v.first_name, v.last_name, e.event_name, h.hotel_name
+FROM vips v
+JOIN events e ON v.event = e.event_id
+JOIN reservations r ON v.member_id = r.member_id
+JOIN hotels h ON r.hotel = h.hotel_id;
+
+SELF JOIN: SELECT 
+  v1.first_name || ' ' || v1.last_name AS reviewer,
+  v2.first_name || ' ' || v2.last_name AS reviewed
+FROM vips v1
+JOIN vips v2 ON v1.provides_feedback_to = v2.member_id;
+
+Query with subquery: SELECT v.first_name, v.last_name
+FROM vips v
+JOIN reservations r ON v.member_id = r.member_id
+WHERE r.hotel = (
+    SELECT r2.hotel
+    FROM reservations r2
+    JOIN vips v2 ON r2.member_id = v2.member_id
+    WHERE v2.first_name = 'Lucia' AND v2.last_name = 'Fernandez'
+);
+
+Custom Query: SELECT event_name
+FROM events
+WHERE event_name LIKE '%Climate%';
+
+Custom Query: SELECT h.hotel_name, COUNT(r.member_id) AS vip_count
+FROM hotels h
+JOIN reservations r ON h.hotel_id = r.hotel
+GROUP BY h.hotel_name;
